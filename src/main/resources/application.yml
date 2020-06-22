@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/crm?serverTimezone=GMT&characterEncoding=utf8
+#    url: jdbc:mysql://172.26.65.1:30299/sx5?serverTimezone=GMT&characterEncoding=utf8
+    username: root
+#    username: five
+    password: root
+#    password: group5@sx
+  resources:
+    static-locations: classpath:/templates
+  hikari:
+    minimum-idle: 5
+    maximum-pool-size: 15
+    #<!-- 连接只读数据库时配置为true， 保证安全 -->
+    auto-commit: true
+    #<!-- 一个连接idle状态的最大时长（毫秒），超时则被释放（retired），缺省:10分钟 -->
+    idle-timeout: 600000
+    pool-name: Datasource05
+    #<!-- 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired），缺省:30分钟，建议设置比数据库超时时长少30秒，参考MySQL
+    # wait_timeout参数（show variables like '%timeout%';） -->
+    max-lifetime: 1800000
+    #<!-- 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 缺省:30秒 -->
+    connection-timeout: 30000
+    connection-test-query: SELECT 'x'
+
+#  redis:
+#    host: localhost
+#    port: 6379
+#    jedis:
+#      pool:
+#        max-active: 8
+#        max-wait: 3000
+#        max-idle: 2
+#    timeout: 5000
+
+
+
+server:
+  port: 8080
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+cqrd:
+  jwt:
+    secret: leyou@Login(Auth}*^31)&heiMa% # 登录校验的密钥
+    pubKeyPath: D:\\JwtRsa\\rsa.pub # 公钥地址
+    priKeyPath: D:\\JwtRsa\\rsa.pri # 私钥地址
+    expire: 30 # 过期时间,单位分钟
+    cookieName: CQRD_TOKEN

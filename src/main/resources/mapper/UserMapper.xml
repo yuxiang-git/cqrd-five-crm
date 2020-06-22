@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cqrd.five.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.cqrd.five.dto.User">
+        <id column="userid" property="userId"/>
+        <result column="username" property="userName"/>
+        <result column="password" property="passWord"/>
+        <result column="chinesename" property="chineseName"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="gitaccount" property="gitAccount"/>
+        <result column="score" property="score"/>
+        <result column="credit" property="credit"/>
+        <result column="code" property="code"/>
+        <result column="access" property="access"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+
+    <sql id="column_List">
+        userid,username,chinesename,email,phone,gitaccount,score,credit,access
+    </sql>
+
+    <select id="selectUsers" resultMap="BaseResultMap">
+        SELECT
+        <include refid="column_List"/>
+        FROM user
+    </select>
+
+    <update id="updateUserByName" parameterType="com.cqrd.five.dto.User">
+      update user set chinesename=#{chineseName},email=#{email},phone=#{phone},gitaccount=#{gitAccount},score=#{score},credit=#{credit},access=#{access} where username = #{userName}
+    </update>
+
+    <insert id="addUser" parameterType="com.cqrd.five.dto.User">
+        INSERT INTO user (username,chinesename,email,phone,gitaccount,score,credit,access,status)
+            VALUES
+         (#{userName},#{chineseName},#{email},#{phone},#{gitAccount},#{score},#{credit},#{access},#{status})
+    </insert>
+
+    <select id="selectByName" resultType="Integer">
+        SELECT count(*) FROM user WHERE username=#{userName}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqrd.five.mapper.CrmMapper">
+
+    <!--管理员操作-->
+
+    <!--展示所有数据-->
+    <select id="showUserInfo" resultType="com.cqrd.five.dto.User">
+        select * from user
+    </select>
+
+    <!--模糊查询-->
+    <select id="selectUserInfoByAll" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where username like "%"#{all}"%" or phone like "%"#{all}"%" or gitaccount like "%"#{all}"%" or email like "%"#{all}"%"
+    </select>
+    <select id="selectUserInfoByName" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where chinesename like "%"#{chineseName}"%"
+    </select>
+    <select id="selectUserInfoByPhone" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where phone like "%"#{phone}"%"
+    </select>
+    <select id="selectUserInfoByGitAccount" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where gitaccount like "%"#{gitAccount}"%"
+    </select>
+    <select id="selectUserInfoByEmail" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where email like "%"#{email}"%"
+    </select>
+    <select id="selectUserInfoByScore" resultType="com.cqrd.five.dto.User" parameterType="java.lang.Double">
+        select * from user where score = #{score}
+    </select>
+    <select id="selectUserInfoByCredit" resultType="com.cqrd.five.dto.User" parameterType="java.lang.Double">
+        select * from user where credit = #{credit}
+    </select>
+
+    <!--添加成绩学分、修改-->
+    <update id="addupdate" parameterType="com.cqrd.five.dto.User">
+        update user set phone = #{phone},gitaccount = #{gitAccount},score = #{score},credit = #{credit} where username = #{userName}
+    </update>
+
+    <!--SQL语句-->
+    <!--delete from user where userid in (select userid from user where username in (#{username}) and access != 1)-->
+    <!--批量删除-->
+    <delete id="delete" parameterType="Integer">
+        delete from user where userid in
+        <foreach collection="array" item="ids" open="(" close=")" separator=",">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--查询执行批量删除的ID-->
+    <select id="deleteSelect" resultType="Integer" parameterType="String">
+        select userid from user where username in 
+        <foreach collection="array" item="username" open="(" close=")" separator=",">
+            #{username}
+        </foreach>
+        and access != 1
+    </select>
+
+    <!--清空所有数据-->
+    <update id="truncateUser">
+        truncate table user
+    </update>
+
+    <!--录入用户名、密码非空数据-->
+    <insert id="addUser" parameterType="com.cqrd.five.dto.User">
+        insert into user(userName,passWord,chineseName,email,phone,gitAccount,score,credit,code,access,status) values(#{userName},#{passWord},#{chineseName},#{email},#{phone},#{gitAccount},#{score},#{credit},#{code},#{access},#{status})
+    </insert>
+
+    <!--普通用户操作-->
+
+    <!--展示所有数据-->
+    <select id="showOrdiInfo" resultType="com.cqrd.five.dto.User">
+        select * from user where access != 1
+    </select>
+
+    <!--模糊查询-->
+    <select id="selectOrdiInfoByAll" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where access != 1 and username like "%"#{all}"%" or phone like "%"#{all}"%" or gitaccount like "%"#{all}"%" or email like "%"#{all}"%"
+    </select>
+    <select id="selectOrdiInfoByName" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where access != 1 and chinesename like "%"#{chineseName}"%"
+    </select>
+    <select id="selectOrdiInfoByPhone" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where access != 1 and phone like "%"#{phone}"%"
+    </select>
+    <select id="selectOrdiInfoByGitAccount" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where access != 1 and gitaccount like "%"#{gitAccount}"%"
+    </select>
+    <select id="selectOrdiInfoByEmail" resultType="com.cqrd.five.dto.User" parameterType="String">
+        select * from user where access != 1 and email like "%"#{email}"%"
+    </select>
+    <select id="selectOrdiInfoByScore" resultType="com.cqrd.five.dto.User" parameterType="java.lang.Double">
+        select * from user where access != 1 and score = #{score}
+    </select>
+    <select id="selectOrdiInfoByCredit" resultType="com.cqrd.five.dto.User" parameterType="java.lang.Double">
+        select * from user where access != 1 and credit = #{credit}
+    </select>
+
+</mapper>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqrd.five.mapper.UserMapper">
+
+    <resultMap id="UserEntityMap"
+               type="com.cqrd.five.dto.User">
+        <id column="userid" property="userId"/>
+        <result column="username" property="userName"/>
+        <result column="password" property="passWord"/>
+        <result column="chinesename" property="chineseName"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="gitaccount" property="gitAccount"/>
+        <result column="score" property="score"/>
+        <result column="credit" property="credit"/>
+        <result column="code" property="code"/>
+        <result column="access" property="access"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+
+    <!--查询所有信息-->
+    <!--List<User> findByAll();-->
+    <select id="findByAll"
+            resultMap="UserEntityMap">
+		select * from user
+	</select>
+
+    <!--查询用户名是否存在，若存在，不允许注册-->
+    <!--User findUserByName(/*@Param("name")*/ String userName);-->
+    <select id="findUserByName"
+            resultMap="UserEntityMap">
+		select * from user where username=#{userName}
+	</select>
+
+    <select id="findByName"
+            resultMap="UserEntityMap">
+		select * from user where username=#{userName}
+	</select>
+
+    <!--导出选择用户-->
+    <select id="findUserByExportChecked" resultMap="UserEntityMap" parameterType="String">
+        select * from user where username in
+        <foreach collection="array" item="username" open="(" close=")" separator=",">
+            #{username}
+        </foreach>
+    </select>
+
+    <!--注册  插入一条user记录-->
+    <!--int regist(User user);-->
+    <insert id="regist" useGeneratedKeys="true"
+            keyProperty="userId" keyColumn = "userid">
+    insert into user(username,password,chinesename,email,phone,gitaccount)
+    values(#{userName},#{passWord},#{chineseName},#{email},#{phone},#{gitAccount})
+    </insert>
+
+    <!--登录-->
+    <!--User login(User user);-->
+    <select id="login"
+            resultMap="UserEntityMap">
+		select * from user  where username = #{userName} and password = #{passWord}
+	</select>
+
+    <!--校验username是否存在-->
+    <!--int checkUsername(String userName);-->
+    <select id="checkUsername" parameterType="string" resultType="int">
+      select count(1)
+      from user
+      where username = #{userName}
+    </select>
+
+    <!--校验email是否存在-->
+    <!--int checkEmail(String email);-->
+    <select id="checkEmail" parameterType="string" resultType="int">
+      select count(1)
+      from user
+      where email = #{email}
+    </select>
+
+    <!--通过email查询用户名是否匹配-->
+    <!--String selectUserNameByEmail(String email);-->
+    <select id="selectUserNameByEmail" parameterType="string" resultType="String">
+      select username
+      from user
+      where email = #{email}
+    </select>
+
+    <!--更新数据库验证码-->
+    <!--boolean updateCode(@Param("md5code")String md5code, @Param("username")String username);-->
+    <update id="updateCode" parameterType="string">
+      update user
+      set code = #{md5code}
+      where username = #{username}
+    </update>
+
+    <!--更新数据库验证码时间-->
+    <!--boolean updateDate(@Param("stringoutdate") String stringoutdate, @Param("username")String username);-->
+    <update id="updateDate" parameterType="string">
+      update user
+      set outdate = #{stringoutdate}
+      where username = #{username}
+    </update>
+
+    <!--查询验证码过期时间-->
+    <!--String selectDate(String username);-->
+    <select id="selectDate" parameterType="string" resultType="string">
+      select outdate
+      from user
+      where username = #{username}
+    </select>
+
+    <!--查询验证码-->
+    <!--String selectCode(String username);-->
+    <select id="selectCode" parameterType="string" resultType="String">
+      select code
+      from user
+      where username = #{username}
+    </select>
+
+    <!--更新用户密码-->
+    <!--boolean updatePassword( @Param("username")String username,@Param("md5newpassword")String md5newpassword);-->
+    <update id="updatePassword" parameterType="string">
+      update user
+      set password = #{md5newpassword}
+      where username = #{username}
+    </update>
+
+    <!--更新验证码时间-->
+    <!--boolean twoUpdateDate(@Param("stringnewdate") String stringnewdate, @Param("username")String username);-->
+    <update id="twoUpdateDate" parameterType="string">
+      update user
+      set outdate = #{stringnewdate}
+      where username = #{username}
+    </update>
+
+    <!--清空验证码-->
+    <!--boolean twoUpdateCode(String username);-->
+    <update id="twoUpdateCode" parameterType="string">
+      update user
+      set code = null
+      where username = #{username}
+    </update>
+
+</mapper>
